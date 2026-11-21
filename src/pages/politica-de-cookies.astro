@@ -1,0 +1,49 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { firma } from '../data';
+import { u } from '../lib/cale';
+---
+
+<Legal
+  titlu="Politica de cookies"
+  descriere={`Ce cookie-uri și ce stocare folosește site-ul ${firma.nume}: fără analytics și fără urmărire, doar harta Google de pe pagina Contact.`}
+  actualizat="21 noiembrie 2026"
+>
+  <p>
+    Cookie-urile sunt fișiere mici pe care un site le salvează în browser. Site-ul {firma.nume} nu folosește cookie-uri
+    de analiză, de publicitate sau de urmărire.
+  </p>
+
+  <h2>Ce stocăm noi</h2>
+  <ul>
+    <li>
+      <strong>Alegerea din bannerul de informare</strong> („Am înțeles”), în memoria locală a browserului (localStorage),
+      ca bannerul să nu reapară la fiecare pagină. Nu conține date personale și nu pleacă din browserul dumneavoastră.
+    </li>
+  </ul>
+
+  <h2>Ce pot stoca alții</h2>
+  <ul>
+    <li>
+      <strong>Google Maps</strong>: pe pagina <a href={u('/contact/')}>Contact</a> e afișată harta Google cu adresa noastră.
+      Google poate seta propriile cookie-uri când se încarcă harta. Detalii în{' '}
+      <a href="https://policies.google.com/technologies/cookies?hl=ro" target="_blank" rel="noopener">politica Google privind cookie-urile</a>.
+    </li>
+    <li>
+      <strong>WhatsApp</strong>: butoanele și formularul deschid WhatsApp doar când apăsați pe ele. De acolo se aplică
+      politicile WhatsApp.
+    </li>
+  </ul>
+
+  <h2>Cum le controlați</h2>
+  <p>
+    Puteți șterge sau bloca oricând cookie-urile și memoria locală din setările browserului. Site-ul funcționează și
+    fără ele; fără hartă, adresa rămâne scrisă pe pagina Contact.
+  </p>
+
+  <h2>Întrebări</h2>
+  <p>
+    Ne găsiți la <a href={`tel:${firma.telefonHref}`}>{firma.telefon}</a>. Vedeți și{' '}
+    <a href={u('/politica-de-confidentialitate/')}>politica de confidențialitate</a>.
+  </p>
+</Legal>

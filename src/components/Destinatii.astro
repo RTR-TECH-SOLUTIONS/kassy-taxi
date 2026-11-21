@@ -1,0 +1,143 @@
+---
+// În locul testimonialelor referinței (goale la ei, iar Kassy n-are încă recenzii): destinațiile din Luduș cu
+// km și durata de pe Google Maps, prețul orientativ și „Rezervă”, care completează formularul din hero.
+import Icon from './Icon.astro';
+import { destinatii, pretOrientativ, tarifZi, lei } from '../data';
+import { u } from '../lib/cale';
+
+interface Props {
+  cuRezerva?: boolean;
+}
+const { cuRezerva = true } = Astro.props;
+const tarif = lei(tarifZi);
+---
+
+<section class="dest" id="destinatii" aria-labelledby="dest-titlu">
+  <div class="cadru dest__in">
+    <div class="dest__cap">
+      <h2 id="dest-titlu" class="titlu-sectiune">Din Luduș, cât face drumul</h2>
+      <p>
+        Distanțele și timpii sunt de pe Google Maps, de pe Strada Turzii, fără trafic. Prețul orientativ e pentru o cursă dus, ziua, la {tarif} lei/km.
+        Prețul exact ți-l spunem la telefon.
+      </p>
+      <a href={u('/contact/')} class="buton buton--negru">Altă destinație? Scrie-ne</a>
+    </div>
+    <ol class="dest__lista">
+      {
+        destinatii.map((d) => (
+          <li class="dest__rand">
+            <span class="dest__icon">
+              <Icon name={d.aeroport ? 'plane' : 'pin'} class="size-5" />
+            </span>
+            <span class="dest__nume">{d.nume}</span>
+            <span class="dest__info">
+              {d.km} km · {d.timp}
+            </span>
+            <span class="pastila-pret">~{pretOrientativ(d.km)} lei</span>
+            {cuRezerva && (
+              <a href={u(`/?spre=${encodeURIComponent(d.nume)}#programare`)} class="dest__rezerva" data-rezerva={d.nume} aria-label={`Rezervă o cursă spre ${d.nume}`}>
+                Rezervă <Icon name="arrow-right" class="size-4" />
+              </a>
+            )}
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .dest {
+    padding-block: clamp(56px, 8vw, 96px);
+  }
+  .dest__in {
+    display: grid;
+    gap: 40px;
+  }
+  .dest__cap > p {
+    margin-top: 22px;
+    max-width: 32rem;
+  }
+  .dest__cap .buton {
+    margin-top: 28px;
+  }
+  .dest__lista {
+    border-top: 1px solid var(--color-linie);
+  }
+  .dest__rand {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      'icon nume pret'
+      'icon info rezerva';
+    align-items: center;
+    column-gap: 14px;
+    row-gap: 2px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--color-linie);
+  }
+  .dest__icon {
+    grid-area: icon;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #fff8dc;
+    color: var(--color-ink);
+  }
+  .dest__nume {
+    grid-area: nume;
+    font-family: var(--font-titlu);
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 1.35;
+    color: var(--color-ink);
+  }
+  .dest__info {
+    grid-area: info;
+    font-size: 14px;
+    color: var(--color-text);
+    font-variant-numeric: tabular-nums;
+  }
+  .dest__rand > .pastila-pret {
+    grid-area: pret;
+    justify-self: end;
+  }
+  .dest__rezerva {
+    grid-area: rezerva;
+    justify-self: end;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-titlu);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--color-ink);
+  }
+  .dest__rezerva:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--color-galben);
+    text-underline-offset: 4px;
+  }
+  @media (min-width: 640px) {
+    .dest__rand {
+      grid-template-columns: auto minmax(0, 1fr) 130px 92px 92px;
+      grid-template-areas: 'icon nume info pret rezerva';
+    }
+    .dest__info {
+      font-size: 15px;
+    }
+  }
+  @media (min-width: 1024px) {
+    .dest__in {
+      grid-template-columns: minmax(0, 380px) minmax(0, 1fr);
+      gap: 80px;
+      align-items: start;
+    }
+    .dest__cap {
+      position: sticky;
+      top: 130px;
+    }
+  }
+</style>

@@ -1,0 +1,158 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Icon from '../components/Icon.astro';
+import CookieNotice from '../components/CookieNotice.astro';
+import { getImage } from 'astro:assets';
+import fata from '../assets/foto/hero-fata.jpg';
+import { firma, mesajGeneral, tarifZi, tarifNoapte, lei, destinatii } from '../data';
+import { u, wa } from '../lib/cale';
+
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+}
+
+// Pe taxi-ludus.ro (rădăcină) paginile se indexează; demo-ul din subfolderul demo.mrwebsites.ro/kassy-taxi/ și
+// paginile legale primesc noindex.
+const eDemo = import.meta.env.BASE_URL !== '/';
+const {
+  title = `Taxi Luduș · ${firma.nume} · ${firma.telefon}`,
+  description = `Taxi în Luduș și în afara orașului, transfer la aeroporturile din Târgu Mureș și Cluj. Ziua ${lei(tarifZi)} lei/km. Sună la ${firma.telefon}.`,
+  noindex = false,
+} = Astro.props;
+
+const canonic = new URL(Astro.url.pathname, Astro.site);
+const og = await getImage({ src: fata, width: 1200, format: 'jpg' });
+const ogUrl = new URL(og.src, Astro.site);
+
+// Date structurate pentru Google: firma locală, cu adresa, telefonul și orașele în care merge (NAP identic cu
+// profilul Google „LUDUS KASY TAXI”, de verificat la legare).
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': new URL(`${u('/')}#firma`, Astro.site).href,
+  name: firma.nume,
+  description: `Taxi în ${firma.oras} și în afara orașului, transfer la aeroport.`,
+  url: new URL(u('/'), Astro.site).href,
+  image: ogUrl.href,
+  telephone: firma.telefonHref,
+  priceRange: `${lei(tarifZi)}–${lei(tarifNoapte)} lei/km`,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: firma.strada,
+    addressLocality: firma.oras,
+    postalCode: firma.codPostal,
+    addressRegion: firma.judet,
+    addressCountry: 'RO',
+  },
+  areaServed: [firma.oras, ...destinatii.filter((d) => !d.aeroport).map((d) => d.nume)].map((name) => ({ '@type': 'City', name })),
+};
+---
+
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#1f1f1f" />
+    {(eDemo || noindex) && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonic.href} />
+    <link rel="icon" type="image/svg+xml" href={u('/favicon.svg')} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ro_RO" />
+    <meta property="og:site_name" content={firma.nume} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonic.href} />
+    <meta property="og:image" content={ogUrl.href} />
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  </head>
+  <body>
+    <a
+      href="#continut"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:bg-galben focus:px-4 focus:py-2 focus:text-ink"
+      >Sari la conținut</a
+    >
+    <Header />
+    <main id="continut">
+      <slot />
+    </main>
+    <Footer />
+    <CookieNotice />
+
+    <div class="plutitoare">
+      <a href={`tel:${firma.telefonHref}`} class="plutitor plutitor--tel" aria-label={`Sună la ${firma.telefon}`}>
+        <Icon name="phone" class="size-6" />
+      </a>
+      <a href={wa(firma.whatsapp, mesajGeneral)} target="_blank" rel="noopener" class="plutitor plutitor--wa" aria-label="Scrie-ne pe WhatsApp">
+        <Icon name="whatsapp" class="size-7" />
+      </a>
+    </div>
+
+    <style>
+      .plutitoare {
+        position: fixed;
+        right: 16px;
+        bottom: calc(16px + env(safe-area-inset-bottom));
+        z-index: 40;
+        display: grid;
+        gap: 12px;
+      }
+      /* Ascunse cât timp se vede hero-ul (are deja Sună / WhatsApp), ca să nu acopere butoanele lui. */
+      .plutitoare {
+        transition:
+          opacity 200ms var(--ease-out-soft),
+          transform 200ms var(--ease-out-soft);
+      }
+      .plutitoare[data-ascuns] {
+        opacity: 0;
+        transform: translateY(12px);
+        pointer-events: none;
+      }
+      .plutitor {
+        display: grid;
+        place-items: center;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        box-shadow: 0 4px 14px rgb(0 0 0 / 0.25);
+        transition: transform 160ms var(--ease-out-soft);
+      }
+      .plutitor:hover {
+        transform: scale(1.06);
+      }
+      .plutitor--tel {
+        background: var(--color-galben);
+        color: var(--color-ink);
+      }
+      .plutitor--wa {
+        background: var(--color-whatsapp);
+        color: #fff;
+      }
+      @media (min-width: 1024px) {
+        .plutitoare {
+          right: 24px;
+          bottom: 24px;
+        }
+        .plutitor {
+          width: 60px;
+          height: 60px;
+        }
+      }
+    </style>
+
+    <script>
+      const plutitoare = document.querySelector<HTMLElement>('.plutitoare');
+      const sus = document.querySelector('.hero, .cap');
+      if (plutitoare && sus && 'IntersectionObserver' in window) {
+        plutitoare.setAttribute('data-ascuns', '');
+        new IntersectionObserver(([e]) => plutitoare.toggleAttribute('data-ascuns', e.isIntersecting), { threshold: 0.15 }).observe(sus);
+      }
+    </script>
+  </body>
+</html>

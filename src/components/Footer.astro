@@ -1,0 +1,145 @@
+---
+// Footerul referinței: aceeași poză ca hero-ul sub negru 75 %, bordură galbenă sus, logo alb, linkuri, linie, copyright.
+// TODO(real): pachetul legal (cookies, termeni, confidențialitate) și creditul RTR.
+import { Image } from 'astro:assets';
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import ludus from '../assets/foto/ludus.jpg';
+import { firma } from '../data';
+import { u } from '../lib/cale';
+
+const an = new Date().getFullYear();
+---
+
+<footer class="subsol">
+  <Image src={ludus} alt="" class="subsol__fundal" widths={[800, 1600]} sizes="100vw" />
+  <div class="cadru subsol__in">
+    <div class="subsol__col subsol__col--lat">
+      <a href={u('/')} aria-label="Kassy Taxi, prima pagină"><Logo inchis /></a>
+      <p>Taxi în {firma.oras} și în afara orașului, transfer la aeroport. Rapid, sigur, confortabil.</p>
+    </div>
+    <div class="subsol__col">
+      <h2>Servicii</h2>
+      <ul>
+        <li><a href={u('/servicii/#oras')}>Cursă în oraș</a></li>
+        <li><a href={u('/servicii/#aeroport')}>Transfer aeroport</a></li>
+        <li><a href={u('/servicii/#extraurban')}>În afara orașului</a></li>
+        <li><a href={u('/servicii/#grupuri')}>Grupuri</a></li>
+        <li><a href={u('/#tarife')}>Tarife</a></li>
+      </ul>
+    </div>
+    <div class="subsol__col">
+      <h2>Contact</h2>
+      <ul>
+        <li><a href={`tel:${firma.telefonHref}`}><Icon name="phone" class="size-4" /> {firma.telefon}</a></li>
+        <li><a href={`tel:${firma.telefon2Href}`}><Icon name="phone" class="size-4" /> {firma.telefon2}</a></li>
+        <li><a href={`https://wa.me/${firma.whatsapp}`} target="_blank" rel="noopener"><Icon name="whatsapp" class="size-4" /> WhatsApp</a></li>
+        <li><span><Icon name="pin" class="size-4" /> {firma.adresa}</span></li>
+        <li><span><Icon name="clock" class="size-4" /> Noaptea: curse lungi sau programate</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="cadru subsol__jos">
+    <p>© {an} {firma.nume}. Toate drepturile rezervate.</p>
+    <nav aria-label="Informații legale" class="subsol__legal">
+      <a href={u('/termeni-si-conditii/')}>Termeni și condiții</a>
+      <a href={u('/politica-de-confidentialitate/')}>Confidențialitate</a>
+      <a href={u('/politica-de-cookies/')}>Cookies</a>
+    </nav>
+    <p>
+      Foto Luduș: Szabi237, <a href="https://commons.wikimedia.org/wiki/File:Marosludas.JPG" target="_blank" rel="noopener">Wikimedia Commons</a>, CC BY 3.0
+      · <a href="https://rtrsolutions.ro" target="_blank" rel="noopener">Site realizat de RTR Tech Solutions</a>
+    </p>
+  </div>
+</footer>
+
+<style>
+  .subsol {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-top: 4px solid var(--color-galben);
+    background: var(--color-ink);
+    color: rgb(255 255 255 / 0.8);
+    font-size: 15px;
+  }
+  .subsol__fundal {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .subsol::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgb(0 0 0 / 0.82);
+  }
+  .subsol__in {
+    display: grid;
+    gap: 36px;
+    padding-block: 64px 40px;
+  }
+  .subsol__col--lat p {
+    max-width: 22rem;
+    margin-top: 18px;
+  }
+  .subsol h2 {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .subsol h2::after {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 2px;
+    margin-top: 10px;
+    background: var(--color-galben);
+  }
+  .subsol ul {
+    display: grid;
+    gap: 10px;
+    margin-top: 18px;
+  }
+  .subsol li a,
+  .subsol li span {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .subsol li :global(svg) {
+    color: var(--color-galben);
+    flex: none;
+  }
+  .subsol a:hover {
+    color: var(--color-galben);
+  }
+  .subsol__jos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 24px;
+    padding-block: 22px 28px;
+    padding-right: 80px; /* coloana butoanelor plutitoare Sună / WhatsApp */
+    border-top: 1px solid rgb(255 255 255 / 0.18);
+    font-size: 13px;
+    color: rgb(255 255 255 / 0.6);
+  }
+  .subsol__jos a {
+    text-decoration: underline;
+  }
+  .subsol__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+  }
+  @media (min-width: 768px) {
+    .subsol__in {
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr);
+    }
+  }
+</style>

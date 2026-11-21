@@ -1,0 +1,49 @@
+---
+// Hartă Google Maps fără cheie API (după `templates/prezentare/parchet/src/components/HartaGoogle.astro`, modul 2).
+// Iframe-ul pornește după ce s-a încărcat pagina (requestIdleCallback), deci harta e gata când ajungi la ea;
+// loading="lazy" pornea abia la scroll și lăsa o cutie goală.
+// Linkul direct /maps/embed?pb=... (adresa în base64url, `!1z`) evită redirectul linkului scurt (~2x mai rapid).
+// TODO(real): adresa exactă a sediului sau numele din Google Business Profile în `loc`, ca pinul să cadă pe firmă;
+// la proiectul real, harta se încarcă doar cu acord din bannerul de cookies (ca la parchet).
+interface Props {
+  loc: string;
+  titlu: string;
+  zoom?: number;
+}
+const { loc, titlu, zoom = 10 } = Astro.props;
+const loc64 = Buffer.from(loc, 'utf8').toString('base64url');
+const src = `https://www.google.com/maps/embed?pb=!1m3!2m1!1z${loc64}!6i${zoom}!3m1!1sro!5m1!1sro`;
+---
+
+<iframe title={titlu} data-harta-src={src} referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+<noscript>
+  <iframe title={titlu} src={src} loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="incarcata"></iframe>
+</noscript>
+
+<style>
+  iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    opacity: 0;
+    transition: opacity 250ms var(--ease-out-soft);
+  }
+  iframe.incarcata {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  const porneste = () =>
+    document.querySelectorAll<HTMLIFrameElement>('iframe[data-harta-src]').forEach((f) => {
+      f.addEventListener('load', () => f.classList.add('incarcata'), { once: true });
+      f.src = f.dataset.hartaSrc!;
+      f.removeAttribute('data-harta-src');
+    });
+  if (document.querySelector('iframe[data-harta-src]')) {
+    const candLiber = () => ('requestIdleCallback' in window ? requestIdleCallback(porneste, { timeout: 1500 }) : setTimeout(porneste, 200));
+    if (document.readyState === 'complete') candLiber();
+    else addEventListener('load', candLiber, { once: true });
+  }
+</script>

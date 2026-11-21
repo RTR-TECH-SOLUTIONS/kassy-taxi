@@ -1,0 +1,224 @@
+---
+// Filele de tarife ale referinței: file cu iconiță (bara galbenă sus pe cea activă), dedesubt câte 2 carduri cu
+// poza mașinii, titlu și rânduri cu valoarea pe pastilă neagră cu text galben, plus „Sună acum”.
+// Tarifele de la client (WhatsApp, 20 nov 2026): 4,49 lei/km ziua, 4,99 lei/km seara. TODO(real): de la ce oră e tariful de seară.
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { firma, tarife, type CardTarif } from '../data';
+import zi from '../assets/foto/masini-zi.jpg';
+import noapteFata from '../assets/foto/masini-noapte-fata.jpg';
+import noapteLateral from '../assets/foto/masini-noapte-lateral.jpg';
+import usa from '../assets/foto/logan-usa.jpg';
+import a3 from '../assets/foto/a3-noapte.jpg';
+
+const poze: Record<CardTarif['poza'], { src: ImageMetadata; alt: string; pozitie: string }> = {
+  zi: { src: zi, alt: 'Dacia Logan și Ford Focus Kassy Taxi, ziua', pozitie: '50% 60%' },
+  'noapte-fata': { src: noapteFata, alt: 'Cele două taxiuri Kassy, din față, noaptea', pozitie: '50% 70%' },
+  'noapte-lateral': { src: noapteLateral, alt: 'Ford Focus și Dacia Logan Kassy Taxi în parcare', pozitie: '50% 60%' },
+  usa: { src: usa, alt: 'Dacia Logan Kassy Taxi cu numărul de telefon pe ușă', pozitie: '60% 70%' },
+  a3: { src: a3, alt: 'Autostrada A3 lângă Luduș, noaptea', pozitie: '50% 55%' },
+};
+---
+
+<section class="tarife" id="tarife" aria-labelledby="tarife-titlu">
+  <div class="cadru">
+    <h2 id="tarife-titlu" class="titlu-sectiune titlu-sectiune--centru">Tarife transparente</h2>
+    <p class="tarife__intro">Tariful e afișat în mașină. Pentru drumurile lungi și aeroport îți spunem prețul fix înainte de plecare.</p>
+
+    <div class="file" role="tablist" aria-label="Tipul cursei">
+      {
+        tarife.map((f, i) => (
+          <button
+            type="button"
+            role="tab"
+            class="fila"
+            id={`fila-${f.id}`}
+            aria-controls={`panou-${f.id}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            tabindex={i === 0 ? 0 : -1}
+          >
+            <span class="fila__icon">
+              <Icon name={f.icon} class="size-7" />
+            </span>
+            <span>{f.nume}</span>
+          </button>
+        ))
+      }
+    </div>
+
+    {
+      tarife.map((f, i) => (
+        <div class="panou" role="tabpanel" id={`panou-${f.id}`} aria-labelledby={`fila-${f.id}`} hidden={i !== 0}>
+          {f.carduri.map((c) => {
+            const p = poze[c.poza];
+            return (
+              <article class="tarif">
+                <Image src={p.src} alt={p.alt} widths={[480, 720]} sizes="(min-width: 768px) 600px, 92vw" style={`object-position:${p.pozitie}`} class="tarif__poza" />
+                <div class="tarif__corp">
+                  <h3 class="tarif__titlu">{c.titlu}</h3>
+                  <dl class="tarif__randuri">
+                    {c.randuri.map((r) => (
+                      <div class="tarif__rand">
+                        <dt>{r.eticheta}</dt>
+                        <dd>
+                          <span class="pastila-pret">{r.valoare}</span>
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                  <a href={`tel:${firma.telefonHref}`} class="buton buton--galben tarif__buton">
+                    <Icon name="phone" class="size-5" /> Sună acum
+                  </a>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      ))
+    }
+    <p class="tarife__nota">Noaptea mergem doar la curse lungi sau programate din timp. Prețurile pentru aeroport sunt orientative, calculate cu tariful de zi pentru o cursă dus.</p>
+  </div>
+</section>
+
+<style>
+  .tarife {
+    padding-block: clamp(56px, 8vw, 96px);
+    background: var(--color-gri);
+  }
+  .tarife__intro {
+    max-width: 44rem;
+    margin: 22px auto 0;
+    text-align: center;
+    font-size: 17px;
+    color: var(--color-ink-2);
+  }
+  .file {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 44px;
+  }
+  .fila {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 10px 16px;
+    border: 1px solid #e6e6e6;
+    border-top: 4px solid #e3e6ea;
+    background: #fff;
+    font-family: var(--font-titlu);
+    font-weight: 600;
+    font-size: clamp(14px, 1.2vw + 8px, 18px);
+    line-height: 1.3;
+    color: var(--color-ink);
+    cursor: pointer;
+    transition: border-color 160ms var(--ease-out-soft);
+  }
+  .fila:hover {
+    border-top-color: #cfcfcf;
+  }
+  .fila[aria-selected='true'] {
+    border-top-color: var(--color-galben);
+  }
+  .fila__icon {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 36px;
+  }
+  .fila__icon::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 4px;
+    width: 26px;
+    height: 28px;
+    background: var(--color-galben);
+    z-index: 0;
+  }
+  .fila__icon :global(svg) {
+    position: relative;
+    z-index: 1;
+    color: var(--color-ink);
+  }
+  .panou {
+    display: grid;
+    gap: 24px;
+    margin-top: 24px;
+  }
+  .panou[hidden] {
+    display: none;
+  }
+  @media (min-width: 768px) {
+    .panou {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .tarif {
+    overflow: hidden;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+  }
+  .tarif :global(.tarif__poza) {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+  .tarif__corp {
+    padding: 22px 24px 28px;
+  }
+  .tarif__titlu {
+    font-size: 21px;
+    line-height: 1.45;
+    font-weight: 600;
+    color: var(--color-ink-2);
+  }
+  .tarif__randuri {
+    margin-top: 12px;
+  }
+  .tarif__rand {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+    color: var(--color-ink);
+  }
+  .tarif__buton {
+    margin-top: 24px;
+  }
+  .tarife__nota {
+    margin-top: 22px;
+    text-align: center;
+    font-size: 13px;
+    color: #8a8a8a;
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[role="tablist"]').forEach((lista) => {
+    const file = [...lista.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const alege = (fila: HTMLButtonElement, focus = false) => {
+      file.forEach((f) => {
+        const activa = f === fila;
+        f.setAttribute('aria-selected', String(activa));
+        f.tabIndex = activa ? 0 : -1;
+        const panou = document.getElementById(f.getAttribute('aria-controls')!);
+        if (panou) panou.hidden = !activa;
+      });
+      if (focus) fila.focus();
+    };
+    file.forEach((f, i) => {
+      f.addEventListener('click', () => alege(f));
+      f.addEventListener('keydown', (e) => {
+        const pas = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (pas) alege(file[(i + pas + file.length) % file.length], true);
+      });
+    });
+  });
+</script>

@@ -1,0 +1,64 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { firma, tarifZi, tarifNoapte, intervalNoapte, lei } from '../data';
+import { u } from '../lib/cale';
+---
+
+<Legal
+  titlu="Termeni și condiții"
+  descriere={`Condițiile de folosire a site-ului ${firma.nume}: tarifele, programarea curselor și prețurile orientative.`}
+  actualizat="21 noiembrie 2026"
+>
+  <p>
+    Site-ul prezintă serviciile de taxi {firma.nume} din {firma.oras}, jud. {firma.judet}. Folosindu-l, sunteți de acord
+    cu termenii de mai jos.
+  </p>
+
+  <h2>Cine suntem</h2>
+  <p>
+    {firma.nume} ({firma.operator}), {firma.adresa}, jud. {firma.judet}. Telefon{' '}
+    <a href={`tel:${firma.telefonHref}`}>{firma.telefon}</a> sau <a href={`tel:${firma.telefon2Href}`}>{firma.telefon2}</a>.
+  </p>
+
+  <h2>Tarife și prețuri</h2>
+  <ul>
+    <li>Tariful este de {lei(tarifZi)} lei/km ziua și {lei(tarifNoapte)} lei/km seara și noaptea. Tariful aplicat este cel afișat în mașină.</li>
+    <li>
+      Prețurile din lista de destinații și de la transferul la aeroport sunt <strong>orientative</strong>: sunt calculate
+      cu tariful de zi, pentru o cursă dus, pe distanța de pe Google Maps. Prețul exact vi-l spunem la telefon, înainte de
+      plecare.
+    </li>
+  </ul>
+
+  <h2>Comenzi și programări</h2>
+  <ul>
+    <li>Cursele se comandă la telefon sau pe WhatsApp.</li>
+    <li>
+      Formularul „Programează o cursă” pregătește un mesaj de WhatsApp. Cursa este confirmată doar după ce vă răspundem
+      noi.
+    </li>
+    <li>Noaptea ({intervalNoapte}) facem doar curse lungi sau curse programate din timp.</li>
+    <li>Dacă nu mai aveți nevoie de o cursă programată, vă rugăm să ne anunțați din timp.</li>
+  </ul>
+
+  <h2>Informațiile de pe site</h2>
+  <p>
+    Distanțele și duratele sunt cele de pe Google Maps, fără trafic, și pot diferi în realitate. Ne străduim ca
+    informațiile să fie corecte și la zi, dar ele nu țin loc de confirmarea noastră la telefon.
+  </p>
+
+  <h2>Drepturi de autor</h2>
+  <p>
+    Textele și fotografiile mașinilor aparțin {firma.nume}. Fotografia orașului Luduș este de Szabi237, de pe{' '}
+    <a href="https://commons.wikimedia.org/wiki/File:Marosludas.JPG" target="_blank" rel="noopener">Wikimedia Commons</a>,
+    sub licența CC BY 3.0.
+  </p>
+
+  <h2>Date personale și reclamații</h2>
+  <p>
+    Datele dumneavoastră le prelucrăm ca în <a href={u('/politica-de-confidentialitate/')}>politica de confidențialitate</a>.
+    Pentru orice reclamație, sunați-ne la <a href={`tel:${firma.telefonHref}`}>{firma.telefon}</a>. Dacă nu ajungem la o
+    soluție, vă puteți adresa Autorității Naționale pentru Protecția Consumatorilor{' '}
+    (<a href="https://anpc.ro" target="_blank" rel="noopener">anpc.ro</a>). Se aplică legea română.
+  </p>
+</Legal>

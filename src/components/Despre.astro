@@ -1,0 +1,119 @@
+---
+// „Despre serviciile oferite” al referinței: poză | text + două puncte.
+// Poza: cele două mașini din față, noaptea, în parcare (WhatsApp, 20 nov 2026). Până pe 21 nov era Logan-ul din lateral,
+// dar aceeași scenă a intrat în hero (colajul clientului), așa că aici e alt cadru.
+// v1 (decupaj vertical cu cer negru + ramă galbenă decalată ca la referință) = „asta se vede prost”.
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import masini from '../assets/foto/despre-masini.jpg';
+import { firma } from '../data';
+---
+
+<section class="despre" aria-labelledby="despre-titlu">
+  <div class="cadru despre__in">
+    <figure class="despre__poza">
+      <Image src={masini} alt="Ford Focus MS 13 KSY și Dacia Logan MS 98 KSY, taxiurile Kassy, din față, noaptea, în parcare" widths={[560, 840, 1200]} sizes="(min-width: 1024px) 560px, 92vw" />
+    </figure>
+    <div>
+      <p class="despre__firma"><Icon name="car" class="size-5" /> {firma.nume}, {firma.oras}</p>
+      <h2 id="despre-titlu" class="titlu-sectiune">Taxi de Luduș, cu șoferi de Luduș</h2>
+      <div class="despre__text">
+        <p>
+          Suntem o firmă mică, cu două mașini: un Dacia Logan alb și un Ford Focus argintiu, amândouă cu capota galbenă și dunga în
+          carouri, ușor de recunoscut în parcare. Le găsești după numerele MS 98 KSY și MS 13 KSY.
+        </p>
+        <p>
+          Știm fiecare stradă din oraș, de la gară până la Sub Pădure, și drumul pe A3 spre Târgu Mureș și Cluj. Ne suni, îți spunem
+          în cât timp ajungem și cât costă, fără surprize la final.
+        </p>
+      </div>
+      <ul class="despre__puncte">
+        <li>
+          <span class="despre__bifa"><Icon name="check" class="size-4" /></span>
+          <div>
+            <h3>Rapid, sigur, confortabil</h3>
+            <p>În oraș ajungem de regulă în câteva minute. Mașini curate, cu portbagaj încăpător pentru bagajele de aeroport.</p>
+          </div>
+        </li>
+        <li>
+          <span class="despre__bifa"><Icon name="check" class="size-4" /></span>
+          <div>
+            <h3>Oraș și în afara orașului</h3>
+            <p>Iernut, Câmpia Turzii, Turda, Târgu Mureș, Cluj sau oriunde în țară, cu preț stabilit înainte de plecare.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .despre {
+    padding-block: clamp(56px, 8vw, 100px);
+  }
+  .despre__in {
+    display: grid;
+    gap: 48px;
+    align-items: center;
+  }
+  .despre__poza :global(img) {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: var(--shadow-card);
+  }
+  .despre__firma {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-family: var(--font-titlu);
+    font-size: 18px;
+    color: var(--color-ink);
+  }
+  .despre__firma :global(svg) {
+    color: var(--color-galben-inchis);
+  }
+  .despre__text {
+    display: grid;
+    gap: 14px;
+    margin-top: 22px;
+  }
+  .despre__puncte {
+    display: grid;
+    gap: 22px;
+    margin-top: 30px;
+  }
+  .despre__puncte li {
+    display: flex;
+    gap: 16px;
+  }
+  .despre__bifa {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    flex: none;
+    margin-top: 2px;
+    border-radius: 50%;
+    background: var(--color-galben);
+    color: var(--color-ink);
+  }
+  .despre__puncte h3 {
+    font-size: 20px;
+    line-height: 1.4;
+    font-weight: 700;
+  }
+  .despre__puncte p {
+    margin-top: 4px;
+    font-size: 15px;
+  }
+  @media (min-width: 1024px) {
+    .despre__in {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+      gap: 72px;
+    }
+  }
+</style>

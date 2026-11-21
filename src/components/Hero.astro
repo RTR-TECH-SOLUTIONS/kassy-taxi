@@ -1,0 +1,177 @@
+---
+// v2 (20 nov): v1 = poza Ludușului sub negru 75 % + formularul în dreapta = „hero u nu mi place”
+// (fundal gri, nicio mașină, formularul lua jumătate de ecran).
+// v3 (21 nov): clientul a trimis un colaj cu două poze de noapte editate (asfalt ud) și a cerut „să apară pozele astea
+// pe prima pagină”. Pozele sunt late (2,8:1 și 2,6:1), deci nu mai pot umple coloana din dreapta pe toată înălțimea:
+// stau una sub alta, ca în colajul lui. Telefon: sus, de la margine la margine; desktop: în dreapta textului.
+// Formularul rămâne bară de rezervare peste marginea de jos a hero-ului.
+import { Image } from 'astro:assets';
+import FormularCursa from './FormularCursa.astro';
+import Icon from './Icon.astro';
+import fata from '../assets/foto/hero-fata.jpg';
+import lateral from '../assets/foto/hero-lateral.jpg';
+import { firma, mesajGeneral, intervalNoapte } from '../data';
+import { wa } from '../lib/cale';
+---
+
+<section class="hero" aria-labelledby="hero-titlu">
+  <div class="cadru hero__in">
+    <div class="hero__text">
+      <h1 id="hero-titlu" class="hero__titlu">Taxi în Luduș <span>și în afara orașului</span></h1>
+      <p class="hero__sub">
+        Te luăm de la ușă în câteva minute, oriunde în Luduș. Mergem și la Târgu Mureș, la Cluj sau la aeroport.
+      </p>
+      <div class="hero__butoane">
+        <a href={`tel:${firma.telefonHref}`} class="buton buton--galben">
+          <Icon name="phone" class="size-5" /> Sună: {firma.telefon}
+        </a>
+        <a href={wa(firma.whatsapp, mesajGeneral)} target="_blank" rel="noopener" class="buton buton--contur">
+          <Icon name="whatsapp" class="size-5" /> WhatsApp
+        </a>
+      </div>
+      <ul class="hero__fapte">
+        <li><Icon name="clock" class="size-5" /> Noaptea ({intervalNoapte}): curse lungi sau programate</li>
+        <li><Icon name="phone" class="size-5" /> Sau la <a href={`tel:${firma.telefon2Href}`}>{firma.telefon2}</a></li>
+      </ul>
+    </div>
+    <div class="hero__poze">
+      <Image
+        src={fata}
+        alt="Ford Focus MS 13 KSY și Dacia Logan MS 98 KSY, taxiurile Kassy, din față, noaptea, pe asfaltul ud"
+        widths={[720, 1080, 1448]}
+        sizes="(min-width: 1280px) 720px, (min-width: 1024px) 56vw, 100vw"
+        loading="eager"
+        fetchpriority="high"
+      />
+      <Image
+        src={lateral}
+        alt="Dacia Logan Kassy Taxi din lateral, cu „Ady Bosa, Kasy Taxi, 0758 464 629” pe ușă, și Ford Focus în spate"
+        widths={[720, 1080, 1448]}
+        sizes="(min-width: 1280px) 720px, (min-width: 1024px) 56vw, 100vw"
+        loading="eager"
+      />
+    </div>
+  </div>
+</section>
+
+<div class="cadru rezervare">
+  <FormularCursa varianta="bara" />
+</div>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: #0d0d0d;
+    color: #fff;
+  }
+
+  /* Telefon: pozele sus, de la margine la margine, una sub alta ca în colajul clientului; textul dedesubt. */
+  .hero__in {
+    display: grid;
+    gap: 28px;
+    padding-bottom: 96px;
+  }
+  .hero__poze {
+    order: -1;
+    display: grid;
+    gap: 4px;
+    margin-inline: -16px;
+  }
+  .hero__poze :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .hero__titlu {
+    color: #fff;
+    font-size: clamp(2.3rem, 1.3rem + 4.2vw, 4.4rem);
+    line-height: 1.08;
+    font-weight: 700;
+    letter-spacing: -1px;
+  }
+  .hero__titlu span {
+    display: block;
+    color: var(--color-galben);
+  }
+  .hero__sub {
+    max-width: 30rem;
+    margin-top: 20px;
+    font-size: clamp(1rem, 0.95rem + 0.3vw, 1.15rem);
+    line-height: 1.7;
+    color: rgb(255 255 255 / 0.82);
+  }
+  .hero__butoane {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 30px;
+  }
+  .hero__fapte {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+    margin-top: 28px;
+    font-size: 15px;
+    color: rgb(255 255 255 / 0.8);
+  }
+  .hero__fapte li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hero__fapte :global(svg) {
+    color: var(--color-galben);
+    flex: none;
+  }
+  .hero__fapte a {
+    color: #fff;
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: var(--color-galben);
+    text-underline-offset: 3px;
+  }
+  @media (max-width: 479px) {
+    .hero__butoane .buton {
+      flex: 1 1 100%;
+    }
+  }
+
+  /* Tabletă: pozele intră în cadru, cu colțuri rotunjite. */
+  @media (min-width: 768px) {
+    .hero__in {
+      padding-top: 32px;
+    }
+    .hero__poze {
+      gap: 10px;
+      margin-inline: 0;
+    }
+    .hero__poze :global(img) {
+      border-radius: 8px;
+    }
+  }
+
+  /* Bara de rezervare urcă peste marginea de jos a hero-ului. */
+  .rezervare {
+    position: relative;
+    z-index: 2;
+    margin-top: -64px;
+  }
+
+  /* Desktop: text | cele două poze, una sub alta. */
+  @media (min-width: 1024px) {
+    .hero__in {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      align-items: center;
+      gap: 56px;
+      padding-block: 56px 128px;
+    }
+    .hero__poze {
+      order: 0;
+    }
+    .hero__titlu {
+      font-size: clamp(2.75rem, 0.9rem + 3.1vw, 4rem);
+    }
+  }
+</style>

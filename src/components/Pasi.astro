@@ -1,0 +1,84 @@
+---
+// „Simplu și rapid” al referinței: 3 cercuri negre cu iconiță galbenă, unite cu linie punctată.
+import Icon from './Icon.astro';
+
+const pasi = [
+  { icon: 'smartphone', titlu: 'Suni sau scrii', text: 'La 0758 464 629 sau pe WhatsApp. Ne spui de unde te luăm și unde mergi.' },
+  { icon: 'car', titlu: 'Stabilim cursa', text: 'Îți spunem în cât timp ajunge mașina și, pentru drumurile lungi, prețul.' },
+  { icon: 'smile', titlu: 'Te bucuri de drum', text: 'Șoferul vine la adresă, te ajută cu bagajele și te lasă unde ai nevoie.' },
+] as const;
+---
+
+<section class="pasi" aria-labelledby="pasi-titlu">
+  <div class="cadru">
+    <h2 id="pasi-titlu" class="titlu-sectiune titlu-sectiune--centru">Simplu și rapid</h2>
+    <ol class="pasi__lista">
+      {
+        pasi.map((p) => (
+          <li class="pas">
+            <span class="pas__cerc">
+              <Icon name={p.icon} class="size-7" />
+            </span>
+            <h3 class="pas__titlu">{p.titlu}</h3>
+            <p class="pas__text">{p.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .pasi {
+    padding-block: clamp(56px, 8vw, 96px);
+  }
+  .pasi__lista {
+    display: grid;
+    gap: 40px;
+    margin-top: 56px;
+  }
+  .pas {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .pas__cerc {
+    display: grid;
+    place-items: center;
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background: var(--color-ink);
+    color: var(--color-galben);
+    box-shadow:
+      0 0 0 6px #fff,
+      0 0 0 7px #cfcfcf;
+  }
+  .pas__titlu {
+    margin-top: 24px;
+    font-size: 20px;
+    line-height: 1.5;
+    font-weight: 600;
+  }
+  .pas__text {
+    max-width: 300px;
+    margin-top: 6px;
+    font-size: 15px;
+  }
+  @media (min-width: 768px) {
+    .pasi__lista {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 32px;
+    }
+    .pas:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 42px;
+      left: calc(50% + 70px);
+      width: calc(100% - 140px + 32px);
+      border-top: 3px dotted #2b2b2b;
+    }
+  }
+</style>

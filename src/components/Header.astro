@@ -1,0 +1,290 @@
+---
+// Antetul referinței: bară neagră (pin galben în cerc + disponibilitate) → bară albă cu logo, meniu
+// și blocul „Sună acum” (cerc galben cu receptor + numărul pe casetă neagră cu text galben).
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { firma } from '../data';
+import { u, faraBaza } from '../lib/cale';
+
+const meniu = [
+  { text: 'Acasă', href: '/' },
+  { text: 'Servicii', href: '/servicii/' },
+  { text: 'Tarife', href: '/#tarife' },
+  { text: 'Destinații', href: '/#destinatii' },
+  { text: 'Contact', href: '/contact/' },
+];
+const cale = faraBaza(Astro.url.pathname);
+const activ = (href: string) => (href === '/' ? cale === '/' : !href.includes('#') && cale.startsWith(href));
+---
+
+<header class="antet">
+  <div class="bara-sus">
+    <div class="cadru bara-sus__in">
+      <p class="bara-sus__loc">
+        <span class="bara-sus__pin"><Icon name="pin" class="size-4" /></span>
+        <span class="lg:hidden">Taxi în {firma.oras} și împrejurimi</span>
+        <span class="hidden lg:inline">Taxi în {firma.oras} și împrejurimi · noaptea, curse lungi și programări</span>
+      </p>
+      <div class="bara-sus__dreapta">
+        <span class="hidden md:inline">{firma.adresa}</span>
+        <a href={`tel:${firma.telefon2Href}`} class="hidden sm:inline">{firma.telefon2}</a>
+        <a href={firma.facebook} target="_blank" rel="noopener" aria-label="Kassy Taxi pe Facebook" class="bara-sus__fb">
+          <Icon name="facebook" class="size-4" />
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="bara-meniu">
+    <div class="cadru bara-meniu__in">
+      <a href={u('/')} aria-label="Kassy Taxi, prima pagină"><Logo /></a>
+
+      <nav class="meniu" aria-label="Meniu principal">
+        {
+          meniu.map((m) => (
+            <a href={u(m.href)} aria-current={activ(m.href) ? 'page' : undefined}>
+              {m.text}
+            </a>
+          ))
+        }
+      </nav>
+
+      <a href={`tel:${firma.telefonHref}`} class="suna">
+        <span class="suna__cerc"><Icon name="phone" class="size-5" /></span>
+        <span class="suna__text">
+          <span class="suna__eticheta">Sună acum:</span>
+          <span class="suna__nr">{firma.telefon}</span>
+        </span>
+      </a>
+
+      <button type="button" class="burger" aria-expanded="false" aria-controls="meniu-mobil" data-burger>
+        <Icon name="menu" class="size-6 burger__deschide" />
+        <Icon name="close" class="size-6 burger__inchide" />
+        <span class="sr-only">Meniu</span>
+      </button>
+    </div>
+
+    <div id="meniu-mobil" class="meniu-mobil" hidden>
+      <nav class="cadru" aria-label="Meniu mobil">
+        {
+          meniu.map((m) => (
+            <a href={u(m.href)} aria-current={activ(m.href) ? 'page' : undefined} data-inchide>
+              {m.text}
+            </a>
+          ))
+        }
+        <a href={`tel:${firma.telefonHref}`} class="buton buton--galben mt-4">
+          <Icon name="phone" class="size-5" /> Sună: {firma.telefon}
+        </a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<style>
+  .antet {
+    position: sticky;
+    top: -48px;
+    z-index: 50;
+  }
+  .bara-sus {
+    background: var(--color-ink);
+    color: #fff;
+    font-size: 14px;
+  }
+  .bara-sus__in {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 48px;
+  }
+  .bara-sus__loc {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-titlu);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.3;
+  }
+  .bara-sus__pin {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    flex: none;
+    border-radius: 50%;
+    background: var(--color-galben);
+    color: var(--color-ink);
+  }
+  .bara-sus__dreapta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: rgb(255 255 255 / 0.8);
+  }
+  .bara-sus__dreapta a:hover {
+    color: var(--color-galben);
+  }
+  .bara-sus__fb {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.1);
+    color: #fff;
+  }
+
+  .bara-meniu {
+    background: #fff;
+    box-shadow: 0 1px 0 rgb(0 0 0 / 0.06);
+  }
+  .bara-meniu__in {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    min-height: 80px;
+  }
+  .meniu {
+    display: none;
+    margin-left: auto;
+    gap: 30px;
+  }
+  .meniu a {
+    position: relative;
+    padding: 6px 0;
+    font-family: var(--font-titlu);
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--color-ink);
+  }
+  .meniu a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--color-galben);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 180ms var(--ease-out-soft);
+  }
+  .meniu a:hover::after,
+  .meniu a[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+
+  .suna {
+    display: none;
+    align-items: center;
+    gap: 12px;
+  }
+  .suna__cerc {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--color-galben);
+    color: var(--color-ink);
+    transition: transform 160ms var(--ease-out-soft);
+  }
+  .suna:hover .suna__cerc {
+    transform: rotate(-12deg);
+  }
+  .suna__text {
+    display: grid;
+    gap: 4px;
+  }
+  .suna__eticheta {
+    font-family: var(--font-titlu);
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1;
+    color: var(--color-ink-2);
+  }
+  .suna__nr {
+    padding: 3px 9px;
+    border-radius: 4px;
+    background: var(--color-ink);
+    color: var(--color-galben);
+    font-family: var(--font-titlu);
+    font-weight: 700;
+    font-size: 19px;
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+
+  .burger {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    margin-left: auto;
+    border-radius: 8px;
+    background: var(--color-ink);
+    color: var(--color-galben);
+  }
+  /* SVG-ul vine din Icon.astro, deci stilul scoped nu-l prinde fără :global. */
+  .burger :global(.burger__inchide),
+  .burger[aria-expanded='true'] :global(.burger__deschide) {
+    display: none;
+  }
+  .burger[aria-expanded='true'] :global(.burger__inchide) {
+    display: block;
+  }
+  .meniu-mobil {
+    border-top: 1px solid #eee;
+    background: #fff;
+    padding: 8px 0 20px;
+  }
+  .meniu-mobil nav {
+    display: grid;
+  }
+  .meniu-mobil nav > a:not(.buton) {
+    padding: 14px 0;
+    border-bottom: 1px solid #eee;
+    font-family: var(--font-titlu);
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--color-ink);
+  }
+  .meniu-mobil nav > a[aria-current='page'] {
+    color: var(--color-galben-inchis);
+  }
+
+  @media (min-width: 1024px) {
+    .meniu {
+      display: flex;
+    }
+    .suna {
+      display: flex;
+      margin-left: 16px;
+    }
+    .burger,
+    .meniu-mobil {
+      display: none !important;
+    }
+    .bara-meniu__in {
+      min-height: 94px;
+    }
+  }
+</style>
+
+<script>
+  const buton = document.querySelector<HTMLButtonElement>('[data-burger]');
+  const panou = document.getElementById('meniu-mobil');
+  if (buton && panou) {
+    const seteaza = (deschis: boolean) => {
+      buton.setAttribute('aria-expanded', String(deschis));
+      panou.hidden = !deschis;
+    };
+    buton.addEventListener('click', () => seteaza(buton.getAttribute('aria-expanded') !== 'true'));
+    panou.querySelectorAll('[data-inchide]').forEach((a) => a.addEventListener('click', () => seteaza(false)));
+    addEventListener('keydown', (e) => e.key === 'Escape' && seteaza(false));
+  }
+</script>

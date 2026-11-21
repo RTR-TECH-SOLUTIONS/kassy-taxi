@@ -1,0 +1,57 @@
+---
+// Paginile legale (confidențialitate, cookies, termeni): capul paginilor interioare + text pe o coloană, noindex.
+import Layout from './Layout.astro';
+import PaginaCap from '../components/PaginaCap.astro';
+import { firma } from '../data';
+
+interface Props {
+  titlu: string;
+  descriere: string;
+  actualizat: string;
+}
+const { titlu, descriere, actualizat } = Astro.props;
+---
+
+<Layout title={`${titlu} · ${firma.nume}`} description={descriere} noindex>
+  <PaginaCap titlu={titlu} text={`Ultima actualizare: ${actualizat}`} />
+  <section class="cadru legal">
+    <slot />
+  </section>
+</Layout>
+
+<style>
+  .legal {
+    max-width: 760px;
+    padding-block: 56px 80px;
+    color: var(--color-ink-2);
+  }
+  .legal :global(h2) {
+    margin-top: 40px;
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+  .legal :global(p),
+  .legal :global(ul) {
+    margin-top: 14px;
+  }
+  .legal :global(ul) {
+    display: grid;
+    gap: 8px;
+    padding-left: 20px;
+    list-style: disc;
+  }
+  .legal :global(li::marker) {
+    color: var(--color-galben-inchis);
+  }
+  .legal :global(a) {
+    color: var(--color-ink);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: var(--color-galben);
+    text-underline-offset: 3px;
+  }
+  .legal :global(strong) {
+    color: var(--color-ink);
+  }
+</style>

@@ -1,0 +1,77 @@
+---
+// Sigla de pe flyerul clientului, refăcută în text: lampa galbenă „TAXI”, „KASSY” lat, gros și înclinat, „TAXI” galben dedesubt.
+// Font: Archivo Black Italic lățit la 125 % (cel mai apropiat liber de literele flyerului).
+// Pe închis (footer) e ca pe flyer: KASSY alb, TAXI galben. Pe alb (antet): KASSY negru, TAXI galben cu contur negru.
+// v1 (pătrat negru cu lampă + carouri + „Kassy / Taxi Luduș”, inventat de mine) = „logo u nu mi place”.
+interface Props {
+  inchis?: boolean;
+  class?: string;
+}
+const { inchis = false, class: cls = '' } = Astro.props;
+---
+
+<span class:list={['sigla', { 'sigla--inchis': inchis }, cls]}>
+  <span class="sigla__lampa" aria-hidden="true">TAXI</span>
+  <span class="sigla__nume">Kassy</span>
+  <span class="sigla__taxi">Taxi</span>
+</span>
+
+<style>
+  .sigla {
+    display: inline-grid;
+    justify-items: center;
+    font-family: 'Archivo Variable', var(--font-titlu);
+    font-weight: 900;
+    font-stretch: 125%;
+    line-height: 1;
+    text-transform: uppercase;
+    user-select: none;
+  }
+  .sigla__lampa {
+    position: relative;
+    z-index: 1;
+    padding: 2px 16px 1px;
+    background: var(--color-galben);
+    color: var(--color-ink);
+    font-size: 13px;
+    font-stretch: 112%;
+    letter-spacing: 0.02em;
+    clip-path: polygon(14% 0, 86% 0, 100% 100%, 0 100%);
+    border-radius: 3px 3px 0 0;
+  }
+  .sigla__nume {
+    margin-top: 1px;
+    font-style: italic;
+    font-size: 30px;
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+  }
+  .sigla__taxi {
+    margin-top: -2px;
+    font-style: italic;
+    font-size: 24px;
+    letter-spacing: 0.02em;
+    color: var(--color-galben);
+    /* conturul negru de pe alb, ca „ALBA IULIA” la referință */
+    text-shadow:
+      1px 0 0 var(--color-ink),
+      -1px 0 0 var(--color-ink),
+      0 1px 0 var(--color-ink),
+      0 -1px 0 var(--color-ink),
+      1px 1px 0 var(--color-ink),
+      -1px -1px 0 var(--color-ink),
+      1px -1px 0 var(--color-ink),
+      -1px 1px 0 var(--color-ink);
+  }
+  @media (max-width: 479px) {
+    .sigla {
+      zoom: 0.86;
+    }
+  }
+  .sigla--inchis .sigla__nume {
+    color: #fff;
+  }
+  .sigla--inchis .sigla__taxi {
+    text-shadow: none;
+  }
+</style>

@@ -1,0 +1,87 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { firma } from '../data';
+import { u } from '../lib/cale';
+---
+
+<Legal
+  titlu="Politica de confidențialitate"
+  descriere={`Cum prelucrează ${firma.nume} datele celor care comandă o cursă: ce date primim, pe ce temei, cui le transmitem și ce drepturi aveți conform GDPR.`}
+  actualizat="21 noiembrie 2026"
+>
+  <p>
+    Documentul explică modul în care {firma.nume} prelucrează datele cu caracter personal ale persoanelor care ne sună,
+    ne scriu sau comandă o cursă de taxi.
+  </p>
+
+  <h2>Cine prelucrează datele</h2>
+  <p>
+    Operatorul datelor este <strong>{firma.nume}</strong> ({firma.operator}), {firma.adresa}, jud. {firma.judet}.
+  </p>
+  <ul>
+    <li>Telefon: <a href={`tel:${firma.telefonHref}`}>{firma.telefon}</a> sau <a href={`tel:${firma.telefon2Href}`}>{firma.telefon2}</a></li>
+    <li>WhatsApp: <a href={`https://wa.me/${firma.whatsapp}`} target="_blank" rel="noopener">{firma.telefon}</a></li>
+  </ul>
+
+  <h2>Ce date prelucrăm și de unde le avem</h2>
+  <p>
+    Site-ul nu colectează date de la vizitatori. Nu folosește instrumente de analiză a traficului și nu construiește
+    profiluri. Formularul „Programează o cursă” nu trimite nimic către un server: doar pregătește, în browserul
+    dumneavoastră, un mesaj pe care îl trimiteți, dacă doriți, din contul dumneavoastră de WhatsApp.
+  </p>
+  <p>Prelucrăm doar datele pe care ni le dați direct, la telefon sau pe WhatsApp:</p>
+  <ul>
+    <li>numele și numărul de telefon;</li>
+    <li>adresa de unde vă luăm și destinația;</li>
+    <li>data și ora cursei, numărul de persoane și alte detalii pe care ni le spuneți (bagaje, zborul pentru aeroport).</li>
+  </ul>
+
+  <h2>În ce scop și pe ce temei</h2>
+  <ul>
+    <li>
+      <strong>Pentru a face cursa cerută</strong> (preluare, transport, programare, revenire la telefon): temeiul este
+      contractul de transport și demersurile făcute la cererea dumneavoastră înainte de acesta (art. 6 alin. 1 lit. b din
+      Regulamentul general privind protecția datelor).
+    </li>
+    <li>
+      <strong>Pentru obligațiile legale</strong> ale unui transportator în regim de taxi, inclusiv cele contabile și fiscale
+      (art. 6 alin. 1 lit. c).
+    </li>
+  </ul>
+
+  <h2>Cui transmitem datele</h2>
+  <ul>
+    <li>
+      Dacă ne scrieți pe WhatsApp, Meta Platforms Ireland Ltd., ca furnizor al serviciului. Conversația se supune și
+      politicilor WhatsApp.
+    </li>
+    <li>Furnizorului de găzduire a site-ului, care nu primește însă datele comenzilor.</li>
+    <li>Autorităților, doar când legea ne obligă.</li>
+  </ul>
+  <p>Nu vindem date și nu le folosim în scopuri de marketing.</p>
+
+  <h2>Cât timp le păstrăm</h2>
+  <p>
+    Mesajele și apelurile pentru o cursă le păstrăm doar cât e nevoie pentru acea cursă și pentru eventuale reclamații.
+    Documentele contabile se păstrează cât prevede legea.
+  </p>
+
+  <h2>Ce drepturi aveți</h2>
+  <p>
+    Aveți dreptul de acces la date, de rectificare, de ștergere, de restricționare a prelucrării, de opoziție și de
+    portabilitate, în condițiile Regulamentului. Le puteți exercita sunându-ne sau scriindu-ne pe WhatsApp la{' '}
+    <a href={`tel:${firma.telefonHref}`}>{firma.telefon}</a> ori prin poștă, la adresa de mai sus. Vă răspundem în cel
+    mult o lună.
+  </p>
+  <p>
+    Dacă apreciați că v-am încălcat drepturile, puteți depune o plângere la Autoritatea Națională de Supraveghere a
+    Prelucrării Datelor cu Caracter Personal, B-dul General Gheorghe Magheru nr. 28-30, București, sau pe{' '}
+    <a href="https://www.dataprotection.ro" target="_blank" rel="noopener">dataprotection.ro</a>.
+  </p>
+
+  <h2>Modificări</h2>
+  <p>
+    Dacă modificăm acest document, publicăm aici versiunea nouă, cu data actualizării. Vedeți și{' '}
+    <a href={u('/politica-de-cookies/')}>politica de cookies</a> și <a href={u('/termeni-si-conditii/')}>termenii și condițiile</a>.
+  </p>
+</Legal>

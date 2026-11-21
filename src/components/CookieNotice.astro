@@ -1,0 +1,78 @@
+---
+// Banner informativ (ca la Răpan): site-ul nu are analytics și nu setează cookie-uri de urmărire. Singurul terț e harta
+// Google de pe pagina Contact. Se ține minte doar alegerea de aici (localStorage).
+// Stă jos-stânga, lăsând liberă coloana din dreapta cu butoanele plutitoare Sună / WhatsApp.
+import { u } from '../lib/cale';
+---
+
+<div id="cookie-notice" class="cookie" role="region" aria-label="Informare despre cookie-uri" hidden>
+  <p>
+    Folosim doar stocarea strict necesară, fără instrumente de urmărire. Harta Google de pe pagina Contact poate seta
+    cookie-uri Google. <a href={u('/politica-de-cookies/')}>Politica de cookies</a>
+  </p>
+  <button id="cookie-accept" type="button" class="buton buton--galben">Am înțeles</button>
+</div>
+
+<style>
+  .cookie {
+    position: fixed;
+    left: 12px;
+    right: 84px;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    z-index: 60;
+    padding: 16px 18px;
+    border-radius: 10px;
+    border-top: 3px solid var(--color-galben);
+    background: var(--color-ink);
+    color: rgb(255 255 255 / 0.85);
+    font-size: 14px;
+    line-height: 1.55;
+    box-shadow: 0 16px 40px rgb(0 0 0 / 0.35);
+  }
+  .cookie[hidden] {
+    display: none;
+  }
+  .cookie a {
+    color: var(--color-galben);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .cookie .buton {
+    min-height: 42px;
+    margin-top: 12px;
+    padding: 8px 20px;
+    font-size: 15px;
+  }
+  @media (min-width: 768px) {
+    .cookie {
+      left: 24px;
+      right: auto;
+      bottom: 24px;
+      max-width: 420px;
+    }
+  }
+</style>
+
+<script>
+  const CHEIE = 'kassy-cookie-notice';
+  const banner = document.getElementById('cookie-notice');
+  let vazut = false;
+  try {
+    vazut = localStorage.getItem(CHEIE) === '1';
+  } catch {
+    // Stocare blocată (navigare privată): nu insistăm cu bannerul.
+    vazut = true;
+  }
+  if (banner && !vazut) {
+    banner.hidden = false;
+    document.getElementById('cookie-accept')?.addEventListener('click', () => {
+      banner.hidden = true;
+      try {
+        localStorage.setItem(CHEIE, '1');
+      } catch {
+        /* fără stocare, bannerul reapare la următoarea vizită */
+      }
+    });
+  }
+</script>

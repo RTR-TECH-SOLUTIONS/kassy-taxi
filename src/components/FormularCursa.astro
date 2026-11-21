@@ -1,0 +1,263 @@
+---
+// Formularul de cursă. Două variante:
+// - `card`: cardul „Programează o cursă” al referinței (alb, radius 20, câmpuri doar cu linie jos), pe pagina Contact;
+// - `bara`: bară de rezervare pe un rând, lipită peste marginea de jos a hero-ului, pe prima pagină.
+// Trimiterea deschide WhatsApp cu cererea scrisă. TODO(real): trimitere și pe e-mail (Resend) + confirmare automată.
+import Icon from './Icon.astro';
+import { destinatii } from '../data';
+
+interface Props {
+  varianta?: 'card' | 'bara';
+  titlu?: string;
+  id?: string;
+}
+const { varianta = 'card', titlu = 'Programează o cursă', id = 'programare' } = Astro.props;
+const bara = varianta === 'bara';
+---
+
+<form class:list={['formular', `formular--${varianta}`]} id={id} novalidate data-formular-cursa>
+  <div class="formular__cap">
+    <h2 class="formular__titlu">{titlu}</h2>
+    <p class="formular__intro">
+      {bara ? 'Spune-ne de unde și când, iar cererea ajunge la noi pe WhatsApp.' : 'Completezi în 30 de secunde, iar cererea ajunge la noi pe WhatsApp. Îți confirmăm mașina și ora.'}
+    </p>
+  </div>
+
+  <div class="formular__grila">
+    {
+      !bara && (
+        <>
+          <label class="camp">
+            <span class="camp__eticheta">Nume</span>
+            <input name="nume" type="text" autocomplete="name" placeholder="Numele tău" data-obligatoriu="numele" />
+          </label>
+          <label class="camp">
+            <span class="camp__eticheta">Telefon</span>
+            <input name="telefon" type="tel" autocomplete="tel" inputmode="tel" placeholder="07xx xxx xxx" data-obligatoriu="telefonul" />
+          </label>
+        </>
+      )
+    }
+    <label class="camp camp--lat">
+      <span class="camp__eticheta">De unde te luăm</span>
+      <input name="preluare" type="text" placeholder={bara ? 'Strada și numărul' : 'Strada și numărul, în Luduș sau în apropiere'} data-obligatoriu="adresa de preluare" />
+    </label>
+    <label class="camp camp--lat">
+      <span class="camp__eticheta">Unde mergi</span>
+      <input name="destinatie" type="text" list={`${id}-destinatii`} placeholder="Ex: Aeroportul Târgu Mureș" data-destinatie />
+      <datalist id={`${id}-destinatii`}>
+        {destinatii.map((d) => <option value={d.nume} />)}
+      </datalist>
+    </label>
+    <label class="camp">
+      <span class="camp__eticheta">Data</span>
+      <input name="data" type="date" data-azi />
+    </label>
+    <label class="camp">
+      <span class="camp__eticheta">Ora</span>
+      <input name="ora" type="time" />
+    </label>
+    <label class:list={['camp', { 'camp--lat': !bara }]}>
+      <span class="camp__eticheta">Persoane</span>
+      <select name="persoane">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option value="5-8">5-8 (vin ambele mașini)</option>
+      </select>
+    </label>
+    <button type="submit" class="buton buton--galben formular__trimite">
+      <Icon name="whatsapp" class="size-5" />
+      {bara ? 'Trimite' : 'Trimite cererea pe WhatsApp'}
+    </button>
+  </div>
+
+  <p class="formular__eroare" role="alert" hidden data-eroare></p>
+</form>
+
+<style>
+  .formular {
+    background: #fff;
+    color: var(--color-text);
+    box-shadow: var(--shadow-ridicat);
+  }
+  .formular--card {
+    border-radius: 20px;
+    padding: clamp(24px, 4vw, 40px);
+  }
+  .formular--bara {
+    border-radius: 14px;
+    padding: clamp(20px, 3vw, 28px) clamp(20px, 3vw, 32px);
+  }
+  .formular__titlu {
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 1.875rem);
+    line-height: 1.25;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+  .formular--card .formular__titlu::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 3px;
+    margin-top: 12px;
+    background: var(--color-galben);
+  }
+  .formular__intro {
+    margin-top: 14px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .formular--bara .formular__cap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 16px;
+  }
+  .formular--bara .formular__titlu {
+    font-size: 20px;
+  }
+  .formular--bara .formular__intro {
+    margin-top: 0;
+    font-size: 14px;
+  }
+  .formular__grila {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    column-gap: 24px;
+    margin-top: 6px;
+  }
+  @media (min-width: 520px) {
+    .formular__grila {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .camp--lat,
+    .formular__trimite {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (min-width: 1024px) {
+    .formular--bara .formular__grila {
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 0.8fr) minmax(0, 0.8fr) auto;
+      column-gap: 20px;
+      align-items: end;
+    }
+    .formular--bara .camp--lat,
+    .formular--bara .formular__trimite {
+      grid-column: auto;
+    }
+    .formular--bara .formular__trimite {
+      margin-top: 0;
+      min-height: 52px;
+      padding-inline: 26px;
+    }
+  }
+  .camp {
+    display: grid;
+    padding-top: 16px;
+  }
+  .camp__eticheta {
+    font-family: var(--font-titlu);
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--color-ink-2);
+  }
+  .camp input,
+  .camp select {
+    width: 100%;
+    min-width: 0;
+    height: 46px;
+    padding: 8px 0;
+    border: 0;
+    border-bottom: 1px solid var(--color-linie);
+    border-radius: 0;
+    background: transparent;
+    font: inherit;
+    font-size: 16px;
+    color: var(--color-ink);
+    transition: border-color 160ms var(--ease-out-soft);
+  }
+  .camp input::placeholder {
+    color: #9a9a9a;
+  }
+  .camp input:focus,
+  .camp select:focus {
+    outline: none;
+    border-bottom: 2px solid var(--color-galben);
+  }
+  .camp input[aria-invalid='true'] {
+    border-bottom-color: #c0392b;
+  }
+  .formular__eroare {
+    margin-top: 14px;
+    font-size: 14px;
+    color: #b02a1c;
+  }
+  .formular__trimite {
+    width: 100%;
+    min-height: 58px;
+    margin-top: 26px;
+  }
+</style>
+
+<script>
+  import { firma } from '../data';
+
+  document.querySelectorAll<HTMLFormElement>('[data-formular-cursa]').forEach((f) => {
+    const azi = new Date();
+    const iso = new Date(azi.getTime() - azi.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+    f.querySelectorAll<HTMLInputElement>('[data-azi]').forEach((i) => (i.min = iso));
+    const eroare = f.querySelector<HTMLElement>('[data-eroare]')!;
+
+    f.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const d = new FormData(f);
+      const v = (k: string) => String(d.get(k) ?? '').trim();
+      const lipsa: string[] = [];
+      f.querySelectorAll<HTMLInputElement>('[data-obligatoriu]').forEach((camp) => {
+        const val = camp.value.trim();
+        const gol = !val || (camp.type === 'tel' && val.replace(/\D/g, '').length < 9);
+        camp.setAttribute('aria-invalid', String(gol));
+        if (gol) lipsa.push(camp.dataset.obligatoriu!);
+      });
+      if (lipsa.length) {
+        eroare.textContent = `Mai completează ${lipsa.join(', ')}.`;
+        eroare.hidden = false;
+        f.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
+        return;
+      }
+      eroare.hidden = true;
+      const zi = v('data') ? new Date(v('data') + 'T12:00').toLocaleDateString('ro-RO', { weekday: 'long', day: 'numeric', month: 'long' }) : '';
+      const cand = zi || (v('ora') ? 'azi' : 'cât mai repede');
+      const randuri = [
+        'Bună ziua! Aș vrea să programez o cursă.',
+        v('nume') ? `Nume: ${v('nume')}` : '',
+        v('telefon') ? `Telefon: ${v('telefon')}` : '',
+        `De unde: ${v('preluare')}`,
+        v('destinatie') ? `Unde: ${v('destinatie')}` : '',
+        `Când: ${cand}${v('ora') ? ', ora ' + v('ora') : ''}`,
+        `Persoane: ${v('persoane')}`,
+      ].filter(Boolean);
+      window.open(`https://wa.me/${firma.whatsapp}?text=${encodeURIComponent(randuri.join('\n'))}`, '_blank', 'noopener');
+    });
+  });
+
+  // Destinația venită din altă pagină (/?spre=Turda#programare).
+  const spre = new URLSearchParams(location.search).get('spre');
+  const primul = document.querySelector<HTMLInputElement>('[data-formular-cursa] [data-destinatie]');
+  if (spre && primul) primul.value = spre;
+
+  // „Rezervă” din lista de destinații: completează destinația și duce la formular.
+  document.querySelectorAll<HTMLElement>('[data-rezerva]').forEach((b) =>
+    b.addEventListener('click', (e) => {
+      const f = document.querySelector<HTMLFormElement>('[data-formular-cursa]');
+      const camp = f?.querySelector<HTMLInputElement>('[data-destinatie]');
+      if (!f || !camp) return;
+      e.preventDefault();
+      camp.value = b.dataset.rezerva ?? '';
+      f.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+      setTimeout(() => (f.elements.namedItem('preluare') as HTMLInputElement)?.focus({ preventScroll: true }), 450);
+    }),
+  );
+</script>

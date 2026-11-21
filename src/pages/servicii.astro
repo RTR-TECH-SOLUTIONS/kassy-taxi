@@ -1,0 +1,158 @@
+---
+// Pagina „Servicii” (referința o are în meniu): câte un rând poză | text pentru fiecare serviciu de pe flyer,
+// apoi pașii și destinațiile. Pozele: mașinile clientului + autostrada A3 la Luduș (Wikimedia, CC0).
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import PaginaCap from '../components/PaginaCap.astro';
+import Pasi from '../components/Pasi.astro';
+import Destinatii from '../components/Destinatii.astro';
+import Icon from '../components/Icon.astro';
+import { firma } from '../data';
+import { u } from '../lib/cale';
+import noapteFata from '../assets/foto/masini-noapte-fata.jpg';
+import zi from '../assets/foto/masini-zi.jpg';
+import a3 from '../assets/foto/a3-noapte.jpg';
+import lateral from '../assets/foto/masini-noapte-lateral.jpg';
+
+const servicii = [
+  {
+    id: 'oras',
+    titlu: 'Cursă în Luduș',
+    poza: noapteFata,
+    alt: 'Cele două taxiuri Kassy din față, noaptea, în parcare',
+    pozitie: '50% 65%',
+    text: 'Te luăm de la ușă oriunde în oraș și în satele din jur. Suni, îți spunem în câte minute ajungem, iar tariful e cel din mașină.',
+    puncte: ['Piață, gară, spital, școală, cumpărături', 'Și în weekend; noaptea (22–6), doar programat', 'Plata la final, la șofer'],
+  },
+  {
+    id: 'aeroport',
+    titlu: 'Transfer la aeroport',
+    poza: zi,
+    alt: 'Dacia Logan și Ford Focus Kassy Taxi, ziua',
+    pozitie: '50% 55%',
+    text: 'Aeroportul Transilvania din Târgu Mureș e la 40 km de Luduș (27 de minute pe A3), Aeroportul Avram Iancu din Cluj la 74 km. Ne dai ora zborului și plecăm din timp.',
+    puncte: ['Prețul îl afli la rezervare', 'Loc în portbagaj pentru valize', 'Și la întoarcere: te așteptăm la sosiri'],
+  },
+  {
+    id: 'extraurban',
+    titlu: 'În afara orașului',
+    poza: a3,
+    alt: 'Autostrada A3 la Luduș, noaptea',
+    pozitie: '50% 60%',
+    text: 'Iernut, Câmpia Turzii, Turda, Târgu Mureș, Cluj-Napoca sau oriunde în țară. Pentru drumurile lungi îți spunem prețul întreg înainte să pornim.',
+    puncte: ['Tarif pe kilometru, fără surprize', 'Așteptare la destinație, la cerere', 'Dus-întors în aceeași zi'],
+  },
+  {
+    id: 'grupuri',
+    titlu: 'Persoane și grupuri',
+    poza: lateral,
+    alt: 'Ford Focus și Dacia Logan Kassy Taxi unul lângă altul',
+    pozitie: '50% 60%',
+    text: 'Pentru 5-8 persoane venim cu ambele mașini: la nunți, botezuri, la gară sau la aeroport, toată lumea pleacă deodată.',
+    puncte: ['Până la 8 persoane cu două mașini', 'Programare din timp, cu oră fixă', 'Un singur telefon pentru tot grupul'],
+  },
+];
+---
+
+<Layout title={`Servicii taxi în Luduș: oraș, aeroport, în afara orașului · ${firma.nume}`}>
+  <PaginaCap titlu="Servicii" text="Transport persoane în oraș și în afara orașului, transfer la aeroport, pentru o persoană sau pentru grupuri." />
+
+  <div class="cadru randuri">
+    {
+      servicii.map((s, i) => (
+        <section class:list={['rand', { 'rand--invers': i % 2 === 1 }]} id={s.id} aria-labelledby={`t-${s.id}`}>
+          <Image src={s.poza} alt={s.alt} widths={[600, 900, 1200]} sizes="(min-width: 1024px) 620px, 92vw" class="rand__poza" style={`object-position:${s.pozitie}`} />
+          <div class="rand__text">
+            <h2 id={`t-${s.id}`} class="titlu-sectiune">
+              {s.titlu}
+            </h2>
+            <p>{s.text}</p>
+            <ul>
+              {s.puncte.map((p) => (
+                <li>
+                  <span class="bifa">
+                    <Icon name="check" class="size-3.5" />
+                  </span>
+                  {p}
+                </li>
+              ))}
+            </ul>
+            <div class="rand__butoane">
+              <a href={`tel:${firma.telefonHref}`} class="buton buton--galben">
+                <Icon name="phone" class="size-5" /> Sună: {firma.telefon}
+              </a>
+              <a href={u('/#programare')} class="buton buton--negru">
+                Programează
+              </a>
+            </div>
+          </div>
+        </section>
+      ))
+    }
+  </div>
+
+  <Pasi />
+  <Destinatii />
+</Layout>
+
+<style>
+  .randuri {
+    display: grid;
+    gap: clamp(56px, 8vw, 96px);
+    padding-block: clamp(56px, 8vw, 96px);
+  }
+  .rand {
+    display: grid;
+    gap: 32px;
+    align-items: center;
+  }
+  .rand :global(.rand__poza) {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: var(--shadow-card);
+  }
+  .rand__text > p {
+    margin-top: 22px;
+  }
+  .rand__text ul {
+    display: grid;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .rand__text li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-titlu);
+    font-weight: 500;
+    color: var(--color-ink);
+  }
+  .bifa {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    flex: none;
+    border-radius: 50%;
+    background: var(--color-galben);
+    color: var(--color-ink);
+  }
+  .rand__butoane {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+  }
+  @media (min-width: 1024px) {
+    .rand {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 72px;
+    }
+    .rand--invers :global(.rand__poza) {
+      order: 2;
+    }
+  }
+</style>

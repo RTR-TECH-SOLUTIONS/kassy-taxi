@@ -1,0 +1,128 @@
+---
+// „Călătorești cum vrei, când vrei” al referinței: titlu centrat, paragraf, 3 carduri albe cu iconiță galbenă în cerc.
+import Icon from './Icon.astro';
+import { u } from '../lib/cale';
+
+const carduri = [
+  {
+    icon: 'pin',
+    titlu: 'Cursă în oraș',
+    text: 'Te luăm de la adresă oriunde în Luduș: la piață, la gară, la spital sau acasă după o seară în oraș.',
+    link: '/servicii/#oras',
+  },
+  {
+    icon: 'plane',
+    titlu: 'Transfer aeroport',
+    text: 'Aeroportul Transilvania e la 40 km (27 de minute), cel din Cluj la 74 km. Plecăm din timp, cu loc pentru bagaje.',
+    link: '/servicii/#aeroport',
+  },
+  {
+    icon: 'route',
+    titlu: 'În afara orașului',
+    text: 'Iernut, Câmpia Turzii, Turda, Târgu Mureș, Cluj sau mai departe. Prețul îl afli la telefon, înainte să plecăm.',
+    link: '/servicii/#extraurban',
+  },
+] as const;
+---
+
+<section class="servicii" aria-labelledby="servicii-titlu">
+  <div class="cadru">
+    <h2 id="servicii-titlu" class="titlu-sectiune titlu-sectiune--centru">Călătorești cum vrei, când vrei</h2>
+    <p class="servicii__intro">
+      Poți comanda pe loc sau din timp, cu ora fixată. Noaptea mergem la curse lungi și la cele programate din timp. Pentru grupuri de până la 8 persoane venim cu ambele mașini.
+    </p>
+    <ul class="servicii__grila">
+      {
+        carduri.map((c) => (
+          <li class="card">
+            <span class="card__icon">
+              <Icon name={c.icon} class="size-7" />
+            </span>
+            <h3 class="card__titlu">{c.titlu}</h3>
+            <p class="card__text">{c.text}</p>
+            <a href={u(c.link)} class="card__link">
+              Detalii <Icon name="arrow-right" class="size-4" />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .servicii {
+    padding-block: clamp(56px, 8vw, 96px);
+    background: var(--color-gri);
+  }
+  .servicii__intro {
+    max-width: 46rem;
+    margin: 22px auto 0;
+    text-align: center;
+    font-size: 17px;
+    color: var(--color-ink-2);
+  }
+  .servicii__grila {
+    display: grid;
+    gap: 24px;
+    margin-top: 48px;
+  }
+  @media (min-width: 768px) {
+    .servicii__grila {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 36px 28px 30px;
+    border: 1px solid #ececec;
+    border-radius: 10px;
+    background: #fff;
+    text-align: center;
+    transition:
+      box-shadow 200ms var(--ease-out-soft),
+      transform 200ms var(--ease-out-soft);
+  }
+  .card:hover {
+    box-shadow: var(--shadow-card);
+    transform: translateY(-3px);
+  }
+  .card__icon {
+    display: grid;
+    place-items: center;
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    border: 2px solid var(--color-galben);
+    color: var(--color-galben-inchis);
+    background: #fffbea;
+  }
+  .card__titlu {
+    margin-top: 22px;
+    font-size: 22px;
+    line-height: 1.4;
+    font-weight: 600;
+  }
+  .card__text {
+    margin-top: 10px;
+    font-size: 15px;
+  }
+  .card__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 18px;
+    font-family: var(--font-titlu);
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--color-ink);
+  }
+  .card__link:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--color-galben);
+    text-underline-offset: 4px;
+  }
+</style>

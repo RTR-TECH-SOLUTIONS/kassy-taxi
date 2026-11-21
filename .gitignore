@@ -1,0 +1,8 @@
+node_modules
+dist
+.astro
+.DS_Store
+.deploy
+_research
+README-DEMO.md
+.playwright-mcp

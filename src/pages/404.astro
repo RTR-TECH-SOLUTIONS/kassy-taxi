@@ -1,0 +1,14 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PaginaCap from '../components/PaginaCap.astro';
+import { firma } from '../data';
+import { u } from '../lib/cale';
+---
+
+<Layout title={`Pagina nu există · ${firma.nume}`}>
+  <PaginaCap titlu="Pagina nu există" text="Linkul e greșit sau pagina a fost mutată. Dacă aveai nevoie de un taxi, sună-ne direct." />
+  <div class="cadru" style="padding-block: 56px; display: flex; flex-wrap: wrap; gap: 12px;">
+    <a href={`tel:${firma.telefonHref}`} class="buton buton--galben">Sună: {firma.telefon}</a>
+    <a href={u('/')} class="buton buton--negru">Înapoi la prima pagină</a>
+  </div>
+</Layout>
