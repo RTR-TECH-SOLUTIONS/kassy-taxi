@@ -6,6 +6,8 @@ plată de găzduire**: clientul a plătit doar site-ul (500 lei, 20 nov 2026). N
 ## 0. Domeniul
 
 `taxi-ludus.ro` (cerut de client; `taxiludus.ro` e al concurenței Best Taxi B&D din 13 nov 2026).
+**Înregistrat 21 nov 2026** în Openprovider pe contactul RTR TECH SOLUTIONS S.R.L. (MR980230-RO), €6,00, expiră
+21 nov 2027, Autorenew „Off (Always)”, cu o notă internă pe domeniu.
 Se înregistrează pe un an prin Openprovider, pe nameserverele `ns1.mrwebsites.ro` / `ns2.mrwebsites.ro`,
 **cu reînnoirea automată oprită** (cerut de Mario: clientul nu plătește găzduirea). Panoul nostru înregistrează mereu
 cu `autorenew: on` (`src/lib/openprovider.ts` din „website nou”), deci se oprește de mână în Openprovider
@@ -25,7 +27,9 @@ Rezultatul e în `dist/`: paginile, `.htaccess` (HTTPS + fără www, cache, pagi
 
 Repo: `RTR-TECH-SOLUTIONS/kassy-taxi`, ramura `main`.
 
-1. Enhance → client nou „Ady Bosa” (Kassy Taxi) → site nou `taxi-ludus.ro`.
+1. Enhance: site-ul `taxi-ludus.ro` stă în organizația noastră **RTR TECH SOLUTIONS SRL** (nu client separat: Enhance cere
+   email de owner, iar Ady nu are cont), pe un abonament intern **Start** (Subscription ID 24), website
+   `8b158d92-f7a3-49a5-9941-ebb0dbd308f2`. Făcut pe 21 nov 2026.
 2. Site → tabul GitHub → **Connect GitHub**; aplicația creată se instalează pe RTR-TECH-SOLUTIONS doar cu acest repo
    („Only select repositories”).
 3. Ramura `main`, build `npm ci && npm run build`, director publicat `dist`, „Auto deploy on push” pornit → „Deploy now”.
