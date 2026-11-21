@@ -36,10 +36,19 @@ Repo: `RTR-TECH-SOLUTIONS/kassy-taxi`, ramura `main`.
 
 De aici, orice `git push` pe `main` republică site-ul real și, prin workflow, demo-ul.
 
+**Stare 21 nov 2026, 13:20:** site-ul e **live** pe https://taxi-ludus.ro, dar urcat **de mână**: `dist/` arhivat și dezarhivat
+în `public_html` din File Manager-ul Enhance (zip-ul șters după). Pașii 2-3 (GitHub) nu sunt încă făcuți: „Connect GitHub”
+cere „Confirm access” pe contul GitHub RTR-TECH-SOLUTIONS (GitHub Mobile sau parolă, doar Mario). Până atunci, o modificare
+se publică tot așa: `npm run build`, zip din `dist/`, upload + Uncompress în `public_html`. Când se leagă GitHub, rădăcina
+devine `deploys/current/dist` și `public_html` nu mai contează.
+Let's Encrypt s-a emis singur (taxi-ludus.ro + www, până pe 19 feb 2027); http și www fac 301 spre https://taxi-ludus.ro/.
+
 ## 3. După ce domeniul răspunde
 
 - Certificatul Let's Encrypt (și pentru www) și „Force HTTPS” în Enhance.
-- Search Console + sitemap (`https://taxi-ludus.ro/sitemap-index.xml`).
+- Search Console: **făcut 21 nov 2026** pe contul lui Mario: proprietate de domeniu `sc-domain:taxi-ludus.ro`, verificată
+  cu TXT `google-site-verification=…` pus în zona DNS din Enhance (nu se șterge), sitemap trimis (Success), indexare
+  cerută pentru /, /servicii/ și /contact/. Verificarea „e indexat?” se face cu `site:taxi-ludus.ro` pe google.com.
 - **Google Business Profile** „LUDUS KASY TAXI” (Strada Turzii 47, 0 recenzii): se adaugă site-ul. Numele, adresa și
   telefonul trebuie scrise **identic** cu cele din `src/data.ts`. Recenziile contează cât site-ul: concurența din
   Luduș are 100-245.
